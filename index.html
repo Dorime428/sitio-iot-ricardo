@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatización Industrial con IoT — Sitio Educativo | Ricardo Armando Balmaceda Urbina</title>
+<meta name="description" content="Sitio educativo sobre automatización industrial mediante el Internet de las Cosas (IoT). Conceptos, casos prácticos, ruta de aprendizaje, seguridad y recursos.">
+<meta name="author" content="Ricardo Armando Balmaceda Urbina">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   RESET & BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brand: #176B87;
+  --brand-dark: #123049;
+  --accent: #06B6D4;
+  --accent-soft: #67D6E8;
+  --bg-light: #F1F7FA;
+  --bg-lighter: #EAF4F8;
+  --callout: #FFF3E5;
+  --callout-border: #E8A857;
+  --text: #123049;
+  --text-muted: #4A6373;
+  --text-on-dark: #EAF4F8;
+  --white: #ffffff;
+  --code-bg: #1a1a2e;
+  --code-text: #e6e6e6;
+  --code-keyword: #ff79c6;
+  --code-string: #f1fa8c;
+  --code-comment: #6272a4;
+  --code-function: #8be9fd;
+  --code-number: #bd93f9;
+  --shadow-sm: 0 2px 8px rgba(18, 48, 73, 0.08);
+  --shadow-md: 0 8px 24px rgba(18, 48, 73, 0.12);
+  --shadow-lg: 0 18px 48px rgba(18, 48, 73, 0.18);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --nav-h: 70px;
+}
+html { scroll-padding-top: calc(var(--nav-h) + 16px); }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg-light);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, h5 { font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; line-height: 1.2; color: var(--brand-dark); }
+a { color: var(--brand); text-decoration: none; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.section { padding: 84px 0; position: relative; }
+.section-alt { background: var(--white); }
+.section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); text-align: center; margin-bottom: 12px; }
+.section-subtitle {
+  text-align: center; color: var(--text-muted); max-width: 760px;
+  margin: 0 auto 56px; font-size: 1.05rem;
+}
+.eyebrow {
+  display: inline-block; font-family: 'Inter', sans-serif; font-weight: 600;
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+.eyebrow.center { display: block; text-align: center; }
+
+/* Animations removed: Google Sites iframe resizing breaks IntersectionObserver
+   timing and content stays hidden. Static layout instead. */
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(18, 48, 73, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+}
+.nav .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text-on-dark); font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em;
+}
+.nav-logo svg { width: 30px; height: 30px; color: var(--accent); flex-shrink: 0; }
+.nav-logo span.accent { color: var(--accent); }
+
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a {
+  color: var(--text-on-dark); font-weight: 500; font-size: 0.95rem;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  position: relative;
+}
+.nav-links a.active { color: var(--brand-dark); background: var(--accent); font-weight: 600; }
+
+.nav-toggle {
+  display: none; flex-direction: column; gap: 5px; padding: 8px;
+  border-radius: var(--radius-sm);
+}
+.nav-toggle span {
+  width: 26px; height: 3px; background: var(--text-on-dark); border-radius: 2px;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  position: relative; min-height: 92vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 100px 24px 80px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(6,182,212,0.25), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(23,107,135,0.45), transparent 55%),
+    linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 55%, #0d4a5e 100%);
+  color: var(--text-on-dark);
+  overflow: hidden;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(6,182,212,0.18) 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(231,247,250,0.10) 1px, transparent 1.2px);
+  background-size: 60px 60px, 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.7;
+}
+.hero::after {
+  /* Circuit-like connecting lines */
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(90deg, transparent 49%, rgba(6,182,212,0.06) 49%, rgba(6,182,212,0.06) 51%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, rgba(6,182,212,0.06) 49%, rgba(6,182,212,0.06) 51%, transparent 51%);
+  background-size: 120px 120px;
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; max-width: 880px; }
+.hero-eyebrow {
+  display: inline-block; padding: 6px 16px; border-radius: 999px;
+  background: rgba(6,182,212,0.18); border: 1px solid rgba(6,182,212,0.5);
+  color: var(--accent-soft); font-weight: 600; font-size: 0.85rem;
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 26px;
+}
+.hero h1 {
+  color: var(--white); font-size: clamp(2.2rem, 6vw, 4.2rem);
+  font-weight: 800; letter-spacing: -0.02em; margin-bottom: 18px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+.hero h1 .highlight { color: var(--accent-soft); }
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.3rem); color: rgba(234,244,248,0.9);
+  max-width: 640px; margin: 0 auto 32px; font-weight: 400;
+}
+.author-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+  padding: 10px 20px; border-radius: 999px; margin-bottom: 36px;
+  backdrop-filter: blur(6px); font-weight: 600;
+}
+.author-badge svg { width: 20px; height: 20px; color: var(--accent-soft); }
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem;
+  cursor: pointer; text-align: center;
+}
+.btn svg { width: 18px; height: 18px; }
+.btn-primary { background: var(--accent); color: var(--brand-dark); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: var(--text-on-dark); border: 2px solid rgba(255,255,255,0.45); }
+.btn-ghost { background: transparent; color: var(--brand); border: 2px solid var(--brand); padding: 10px 22px; }
+
+/* "Desplázate para explorar" hint removed */
+
+/* =========================================================
+   FUNDAMENTOS — concept cards + flow diagram
+   ========================================================= */
+.cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px; margin-bottom: 72px;
+}
+.concept-card {
+  background: var(--white); border-radius: var(--radius-md); padding: 28px 24px;
+  box-shadow: var(--shadow-sm); border: 1px solid #e3eef3;
+  position: relative; overflow: hidden;
+}
+.concept-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+}
+.concept-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--bg-lighter), #d4ebf3);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; color: var(--brand);
+}
+.concept-icon svg { width: 30px; height: 30px; }
+.concept-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.concept-card p { color: var(--text-muted); font-size: 0.95rem; }
+/* "Saber más" button + concept-extra: now always visible (no accordion, no animation) */
+.concept-extra {
+  font-size: 0.9rem; color: var(--text-muted);
+  background: var(--bg-light); border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-top: 14px;
+}
+.concept-extra ul { padding-left: 18px; list-style: disc; }
+.concept-extra li { margin-bottom: 4px; }
+
+/* Flow diagram */
+.flow-section { background: var(--brand-dark); color: var(--text-on-dark); border-radius: var(--radius-lg); padding: 48px 32px; margin-top: 24px; }
+.flow-section h3 { color: var(--white); text-align: center; margin-bottom: 8px; font-size: 1.4rem; }
+.flow-section .flow-subtitle { text-align: center; color: rgba(234,244,248,0.75); margin-bottom: 36px; font-size: 0.95rem; }
+.flow-diagram {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap;
+}
+.flow-node {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(6,182,212,0.4);
+  border-radius: var(--radius-md); padding: 16px 18px; min-width: 130px;
+  text-align: center;
+}
+.flow-node svg { width: 32px; height: 32px; margin: 0 auto 8px; display: block; color: var(--accent); }
+.flow-node strong { display: block; color: var(--white); font-size: 0.95rem; font-family: 'Poppins', sans-serif; }
+.flow-node small { color: rgba(234,244,248,0.6); font-size: 0.75rem; }
+.flow-arrow { color: var(--accent); display: flex; align-items: center; }
+.flow-arrow svg { width: 28px; height: 28px; }
+.flow-arrow.vertical { display: none; }
+
+/* =========================================================
+   CASOS PRÁCTICOS — accordion cards
+   ========================================================= */
+.accordion { display: flex; flex-direction: column; gap: 18px; }
+.accordion-item {
+  background: var(--white); border-radius: var(--radius-md);
+  border: 1px solid #e3eef3; overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+/* Header is now static (no click, no hover) */
+.accordion-header {
+  width: 100%; display: flex; align-items: center; gap: 18px;
+  padding: 22px 26px; text-align: left;
+  background: var(--white);
+}
+.accordion-num {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  color: var(--white); display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.1rem;
+}
+.accordion-title { flex: 1; }
+.accordion-title h3 { font-size: 1.15rem; margin-bottom: 2px; }
+.accordion-title p { color: var(--text-muted); font-size: 0.88rem; }
+/* Chevron hidden — no expand/collapse anymore */
+.accordion-chevron { display: none; }
+/* Content always visible (no max-height animation) */
+.accordion-content { display: block; }
+.accordion-inner { padding: 4px 26px 28px; }
+.accordion-inner p { color: var(--text-muted); margin-bottom: 16px; }
+.accordion-inner > p:last-child { margin-bottom: 0; }
+
+/* Terminal / code block */
+.terminal {
+  background: var(--code-bg); border-radius: var(--radius-sm);
+  overflow: hidden; margin-top: 8px; box-shadow: var(--shadow-md);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+.terminal-bar {
+  background: #0f0f1e; padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.terminal-dots { display: flex; gap: 6px; }
+.terminal-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+.terminal-title { color: #8a8aa3; font-size: 0.8rem; margin-left: auto; font-family: 'Inter', sans-serif; }
+.terminal pre {
+  margin: 0; padding: 18px 20px; overflow-x: auto;
+  color: var(--code-text); font-size: 0.86rem; line-height: 1.65;
+}
+.tk-key { color: var(--code-keyword); }
+.tk-str { color: var(--code-string); }
+.tk-com { color: var(--code-comment); font-style: italic; }
+.tk-fn { color: var(--code-function); }
+.tk-num { color: var(--code-number); }
+
+/* Alert-by-threshold demo */
+.demo-box {
+  background: var(--bg-light); border-radius: var(--radius-md);
+  padding: 24px; margin-top: 12px; border: 1px dashed #b6d4e0;
+}
+.demo-row { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; flex-wrap: wrap; }
+.demo-row label { font-weight: 600; font-size: 0.92rem; color: var(--brand-dark); }
+.slider-group { flex: 1; min-width: 220px; display: flex; align-items: center; gap: 12px; }
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; flex: 1; height: 6px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 50%, #d4ebf3 50%, #d4ebf3 100%);
+  border-radius: 3px; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--brand); border: 3px solid var(--white);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--brand); border: 3px solid var(--white);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+}
+.threshold-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--brand); min-width: 56px; }
+.sensor-readout {
+  display: flex; align-items: center; gap: 12px; padding: 12px 18px;
+  background: var(--white); border-radius: var(--radius-sm);
+  border-left: 4px solid var(--brand); font-size: 0.92rem;
+}
+.sensor-readout .pulse {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+  /* pulse animation removed for Google Sites compatibility */
+}
+/* @keyframes pulse removed */
+.alert-banner {
+  margin-top: 14px; padding: 14px 18px; border-radius: var(--radius-sm);
+  font-weight: 600; font-size: 0.95rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.alert-banner.ok { background: #d4f5e0; color: #1a6e3a; border-left: 4px solid #27ae60; }
+.alert-banner.warn { background: #ffe0d6; color: #a33a1a; border-left: 4px solid #e74c3c; }
+.alert-banner svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+/* Daily report generator */
+.report-output {
+  background: var(--white); border-radius: var(--radius-md);
+  padding: 22px; margin-top: 14px; border: 1px solid #e3eef3;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.8;
+  display: none;
+}
+.report-output.show { display: block; }
+/* @keyframes fadeIn removed for Google Sites compatibility */
+.report-output h4 { font-family: 'Poppins', sans-serif; color: var(--brand-dark); margin-bottom: 8px; font-size: 1.05rem; }
+.report-output .report-row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px dotted #e3eef3; }
+.report-output .report-row:last-of-type { border-bottom: none; }
+.report-output .report-row span:first-child { color: var(--text-muted); }
+.report-output .report-row span:last-child { font-weight: 600; color: var(--brand-dark); }
+.report-output .report-recs { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3eef3; }
+.report-output .report-recs strong { color: var(--brand-dark); }
+.report-output .report-recs ul { list-style: disc; padding-left: 20px; margin-top: 6px; color: var(--text-muted); }
+.report-output .report-recs li { margin-bottom: 3px; }
+
+/* =========================================================
+   GUÍA — roadmap
+   ========================================================= */
+.roadmap { position: relative; padding: 20px 0; }
+.roadmap-line {
+  position: absolute; top: 56px; left: 8%; right: 8%; height: 4px;
+  background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 100%);
+  border-radius: 2px; z-index: 0;
+}
+.roadmap-stages {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
+  position: relative; z-index: 1;
+}
+.stage { text-align: center; }
+.stage-num {
+  width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%;
+  background: var(--white); border: 4px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem;
+  color: var(--brand-dark); box-shadow: var(--shadow-md);
+}
+.stage h4 { font-size: 1.05rem; margin-bottom: 6px; color: var(--brand-dark); }
+.stage p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 10px; }
+.stage-evidence {
+  font-size: 0.78rem; color: var(--brand); font-weight: 600;
+  background: var(--bg-lighter); padding: 6px 10px; border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+/* =========================================================
+   SEGURIDAD
+   ========================================================= */
+.seguridad-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; }
+.practices-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.practice {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; background: var(--white); border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent); box-shadow: var(--shadow-sm);
+}
+.practice svg { width: 22px; height: 22px; color: #27ae60; flex-shrink: 0; margin-top: 2px; }
+.practice span { font-size: 0.93rem; color: var(--text); }
+.risks-box {
+  background: var(--callout); border: 1px solid var(--callout-border);
+  border-radius: var(--radius-md); padding: 28px; position: relative;
+}
+.risks-box h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; color: #8a4b13; }
+.risks-box h3 svg { width: 26px; height: 26px; color: var(--callout-border); }
+.risks-box ul { display: flex; flex-direction: column; gap: 10px; }
+.risks-box li {
+  display: flex; align-items: flex-start; gap: 10px; font-size: 0.92rem; color: #6b3a0e;
+}
+.risks-box li svg { width: 18px; height: 18px; color: var(--callout-border); flex-shrink: 0; margin-top: 3px; }
+.principles-callout {
+  margin-top: 40px; background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: var(--white); padding: 32px 36px; border-radius: var(--radius-lg);
+  text-align: center; font-size: 1.05rem; font-weight: 500; line-height: 1.6;
+  box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+}
+.principles-callout::before {
+  content: '"'; position: absolute; top: -30px; left: 18px; font-size: 9rem;
+  font-family: 'Poppins', sans-serif; color: rgba(255,255,255,0.08); line-height: 1;
+}
+.principles-callout svg { width: 30px; height: 30px; color: var(--accent-soft); margin: 0 auto 12px; display: block; }
+.principles-callout p { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+
+/* =========================================================
+   RECURSOS
+   ========================================================= */
+.recursos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 56px; }
+.recurso-card {
+  background: var(--white); border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: var(--shadow-sm); border: 1px solid #e3eef3;
+  display: flex; flex-direction: column;
+}
+.recurso-head { padding: 22px 22px 0; }
+.recurso-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--bg-lighter), #d4ebf3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--brand); margin-bottom: 14px;
+}
+.recurso-icon svg { width: 26px; height: 26px; }
+.recurso-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.recurso-card .recurso-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px; padding: 0 22px; flex: 1; }
+.recurso-embed { padding: 0 22px 22px; }
+.recurso-embed .note {
+  font-size: 0.78rem; color: var(--text-muted); font-style: italic;
+  margin-top: 8px; display: flex; align-items: center; gap: 6px;
+}
+.recurso-embed .note svg { width: 14px; height: 14px; flex-shrink: 0; }
+.recurso-embed img { border-radius: var(--radius-sm); border: 1px solid #e3eef3; }
+.recurso-embed .iframe-wrap {
+  position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+  border-radius: var(--radius-sm); border: 1px solid #e3eef3;
+}
+.recurso-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+.btn-card {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--brand); color: var(--white); padding: 10px 18px;
+  border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+}
+.btn-card svg { width: 16px; height: 16px; }
+
+.references { background: var(--white); border-radius: var(--radius-md); padding: 28px 32px; box-shadow: var(--shadow-sm); }
+.references h3 { font-size: 1.15rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.references h3 svg { width: 22px; height: 22px; color: var(--accent); }
+.references ul { display: flex; flex-direction: column; gap: 8px; }
+.references li { font-size: 0.9rem; color: var(--text-muted); padding-left: 22px; position: relative; }
+.references li::before { content: "📚"; position: absolute; left: 0; }
+.references li strong { color: var(--brand-dark); }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer {
+  background: var(--brand-dark); color: var(--text-on-dark);
+  padding: 56px 0 28px; text-align: center;
+}
+.footer-logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.footer-logo svg { width: 32px; height: 32px; color: var(--accent); }
+.footer-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--white); }
+.footer-logo .accent { color: var(--accent); }
+.footer-author {
+  font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.1rem;
+  margin-bottom: 8px; color: var(--accent-soft);
+}
+.footer-meta { display: flex; flex-direction: column; gap: 4px; font-size: 0.92rem; color: rgba(234,244,248,0.75); margin-bottom: 18px; }
+.footer-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 22px auto; max-width: 360px; }
+.footer-note { font-size: 0.82rem; color: rgba(234,244,248,0.55); font-style: italic; }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 880px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: fixed; top: var(--nav-h); left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--brand-dark); padding: 12px 0;
+    box-shadow: var(--shadow-lg);
+    display: none;
+    max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 14px 24px; border-radius: 0; font-size: 1rem; }
+  .nav-links a.active { background: var(--accent); color: var(--brand-dark); }
+  .section { padding: 60px 0; }
+  .seguridad-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 720px) {
+  .roadmap-line { display: none; }
+  .roadmap-stages { grid-template-columns: 1fr; gap: 22px; }
+  .stage { display: flex; align-items: flex-start; gap: 14px; text-align: left; }
+  .stage-num { margin: 0; flex-shrink: 0; width: 52px; height: 52px; font-size: 1.2rem; }
+  .stage-evidence { display: block; }
+  .flow-node { min-width: 100px; padding: 12px; }
+  .flow-arrow { display: none; }
+  .flow-arrow.vertical { display: flex; justify-content: center; }
+  .flow-arrow.vertical svg { transform: rotate(90deg); }
+  .flow-diagram { flex-direction: column; }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .section { padding: 50px 0; }
+  .accordion-header { padding: 18px 16px; gap: 12px; }
+  .accordion-inner { padding: 4px 16px 22px; }
+  .accordion-num { width: 36px; height: 36px; font-size: 0.95rem; }
+}
+
+/* Reduced motion — kept for accessibility, but no longer hides content */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header class="nav" role="banner">
+  <div class="container">
+    <a href="#inicio" class="nav-logo" aria-label="Inicio - IoT Industrial">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="2.5"/>
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+        <circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/>
+      </svg>
+      <span>IoT <span class="accent">Industrial</span></span>
+    </a>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="primary-nav" class="nav-links" aria-label="Navegación principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#fundamentos">Fundamentos</a>
+      <a href="#casos">Casos prácticos</a>
+      <a href="#guia">Guía de aprendizaje</a>
+      <a href="#seguridad">Seguridad</a>
+      <a href="#recursos">Recursos</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <span class="hero-eyebrow">Educación · Telemática · Industria 4.0</span>
+    <h1>Automatización Industrial<br>con <span class="highlight">IoT</span></h1>
+    <p class="hero-subtitle">Sitio educativo para estudiantes e ingenieros de Telemática que desean comprender, diseñar y aplicar soluciones de automatización industrial mediante el Internet de las Cosas.</p>
+    <div class="author-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span>Ricardo Armando Balmaceda Urbina</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#fundamentos" class="btn btn-primary">
+        <span>Comenzar a aprender</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#casos" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        <span>Ver casos prácticos</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FUNDAMENTOS ================= -->
+<section class="section section-alt" id="fundamentos">
+  <div class="container">
+    <span class="eyebrow center">Fundamentos</span>
+    <h2 class="section-title reveal">Fundamentos de IoT Industrial</h2>
+    <p class="section-subtitle reveal delay-1">La automatización industrial mediante IoT integra sensores, actuadores, conectividad y software para que las máquinas y procesos se monitoreen y controlen de forma remota, en tiempo real y con mínima intervención humana. A continuación se presentan los cinco pilares conceptuales del ecosistema IoT industrial.</p>
+
+    <div class="cards-grid">
+      <article class="concept-card reveal">
+        <div class="concept-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.7 2.5-1.5 3.2-.7.6-1 1.3-1 2.1V12"/><circle cx="12" cy="14" r="2"/><path d="M10 19a2 2 0 0 0 4 0"/><path d="M12 2a4 4 0 0 0-4 4c0 1.5.7 2.5 1.5 3.2"/></svg>
+        </div>
+        <h3>Sensores</h3>
+        <p>Miden variables físicas (temperatura, humedad, presión) y las convierten en señales digitales.</p>
+        <div class="concept-extra" id="extra-1">
+          <ul>
+            <li>Analógicos (termistores) y digitales (DS18B20, DHT22).</li>
+            <li>Calibración periódica para mantener precisión.</li>
+            <li>Conectados a microcontroladores por GPIO, I²C o SPI.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="concept-card reveal delay-1">
+        <div class="concept-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <h3>Actuadores</h3>
+        <p>Ejecutan acciones físicas (motores, válvulas) a partir de órdenes recibidas.</p>
+        <div class="concept-extra" id="extra-2">
+          <ul>
+            <li>Relevadores, servomotores, válvulas solenoides.</li>
+            <li>Controlados por señales digitales o PWM.</li>
+            <li>Aislamiento óptico recomendado para proteger el controlador.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="concept-card reveal delay-2">
+        <div class="concept-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20M6 14h4M14 14h4"/><circle cx="18" cy="10" r="0.5" fill="currentColor"/></svg>
+        </div>
+        <h3>Gateways</h3>
+        <p>Conectan los dispositivos de campo con la nube o el dashboard local.</p>
+        <div class="concept-extra" id="extra-3">
+          <ul>
+            <li>Traducen protocolos: Modbus, LoRaWAN → MQTT, HTTPS.</li>
+            <li>Almacenan datos ante caídas de red (buffering).</li>
+            <li>Pueden ejecutar Edge Computing para filtrar datos.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="concept-card reveal delay-3">
+        <div class="concept-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0M7.5 12a4.5 4.5 0 0 1 9 0"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+        </div>
+        <h3>MQTT</h3>
+        <p>Protocolo ligero de mensajería que distribuye los datos desde los sensores hacia los consumidores.</p>
+        <div class="concept-extra" id="extra-4">
+          <ul>
+            <li>Modelo publish/subscribe con un broker intermediario.</li>
+            <li>Tópicos jerárquicos: <code>fabrica/linea1/sensor/temp</code>.</li>
+            <li>Niveles QoS 0, 1 y 2 según fiabilidad requerida.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="concept-card reveal delay-3">
+        <div class="concept-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><path d="M6 15h1M12 15h1M6 18h1"/></svg>
+        </div>
+        <h3>Dashboards</h3>
+        <p>Visualizan los datos en tiempo real y permiten tomar decisiones informadas.</p>
+        <div class="concept-extra" id="extra-5">
+          <ul>
+            <li>Herramientas: Grafana, Node-RED, ThingsBoard.</li>
+            <li>Indicadores, gráficas, medidores y alarmas visuales.</li>
+            <li>Accesibles desde web o app móvil con autenticación.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+
+    <div class="flow-section reveal">
+      <h3>Flujo de datos en un sistema IoT industrial</h3>
+      <p class="flow-subtitle">Desde la variable física hasta la acción correctiva — un ciclo cerrado de monitoreo y control.</p>
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.7 2.5-1.5 3.2-.7.6-1 1.3-1 2.1V12"/><circle cx="12" cy="14" r="2"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+          <strong>Sensor</strong><small>Captura</small>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-node">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20M6 14h4"/></svg>
+          <strong>Gateway</strong><small>Conecta</small>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-node">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          <strong>Broker MQTT</strong><small>Distribuye</small>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-node">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <strong>Dashboard</strong><small>Visualiza</small>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-node">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <strong>Actuador</strong><small>Acción</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CASOS PRÁCTICOS ================= -->
+<section class="section" id="casos">
+  <div class="container">
+    <span class="eyebrow center">Aplicaciones</span>
+    <h2 class="section-title reveal">Casos prácticos</h2>
+    <p class="section-subtitle reveal delay-1">Cuatro escenarios reales de automatización industrial con IoT. Haz clic en cada caso para expandir el detalle, revisar el código de referencia y probar las demostraciones interactivas.</p>
+
+    <div class="accordion">
+      <!-- Caso 1 -->
+      <article class="accordion-item reveal" data-accordion>
+        <div class="accordion-header">
+          <span class="accordion-num">1</span>
+          <div class="accordion-title">
+            <h3>Monitoreo de temperatura</h3>
+            <p>Publicación periódica de lecturas de sensor vía MQTT.</p>
+          </div>
+        </button>
+        <div class="accordion-content" id="acc-1">
+          <div class="accordion-inner">
+            <p>Un microcontrolador (por ejemplo ESP32) lee un sensor DS18B20 cada cierto intervalo y publica el valor en un tópico MQTT. El dashboard se suscribe a ese tópico y grafica la temperatura en tiempo real, permitiendo detectar anomalías sin estar presente en la planta.</p>
+            <div class="terminal">
+              <div class="terminal-bar"><div class="terminal-dots"><span></span><span></span><span></span></div><span class="terminal-title">publicar_temperatura.py</span></div>
+              <pre><span class="tk-com"># Publicar temperatura cada 5 segundos vía MQTT</span>
+<span class="tk-key">import</span> paho.mqtt.client <span class="tk-key">as</span> mqtt
+<span class="tk-key">import</span> time, random
+
+broker = <span class="tk-str">"broker.hivemq.com"</span>
+topic  = <span class="tk-str">"fabrica/linea1/sensor/temp"</span>
+
+client = mqtt.<span class="tk-fn">Client</span>()
+client.<span class="tk-fn">connect</span>(broker, <span class="tk-num">1883</span>)
+
+<span class="tk-key">while</span> <span class="tk-key">True</span>:
+    temperatura = <span class="tk-fn">round</span>(<span class="tk-fn">random</span>.<span class="tk-fn">uniform</span>(<span class="tk-num">22.0</span>, <span class="tk-num">35.0</span>), <span class="tk-num">1</span>)
+    client.<span class="tk-fn">publish</span>(topic, temperatura)
+    <span class="tk-fn">print</span>(<span class="tk-str">f"Publicado: {temperatura} °C"</span>)
+    time.<span class="tk-fn">sleep</span>(<span class="tk-num">5</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Caso 2 -->
+      <article class="accordion-item reveal delay-1" data-accordion>
+        <div class="accordion-header">
+          <span class="accordion-num">2</span>
+          <div class="accordion-title">
+            <h3>Control de actuador</h3>
+            <p>Suscripción a un tópico para activar un relevador.</p>
+          </div>
+        </button>
+        <div class="accordion-content" id="acc-2">
+          <div class="accordion-inner">
+            <p>Un actuador (relevador conectado a una bomba o motor) escucha comandos desde el dashboard. Cuando se publica <code>"ON"</code> en el tópico <code>fabrica/linea1/actuador/bomba</code>, el microcontrolador activa el pin GPIO correspondiente. Esto permite gobernar equipos físicos de forma remota.</p>
+            <div class="terminal">
+              <div class="terminal-bar"><div class="terminal-dots"><span></span><span></span><span></span></div><span class="terminal-title">control_actuador.py</span></div>
+              <pre><span class="tk-com"># Suscribirse y activar relevador según el comando recibido</span>
+<span class="tk-key">import</span> paho.mqtt.client <span class="tk-key">as</span> mqtt
+<span class="tk-key">from</span> gpiozero <span class="tk-key">import</span> OutputDevice
+
+rele = <span class="tk-fn">OutputDevice</span>(<span class="tk-num">17</span>)  <span class="tk-com"># GPIO 17</span>
+topic = <span class="tk-str">"fabrica/linea1/actuador/bomba"</span>
+
+<span class="tk-key">def</span> <span class="tk-fn">on_message</span>(client, userdata, msg):
+    comando = msg.payload.<span class="tk-fn">decode</span>()
+    <span class="tk-key">if</span> comando == <span class="tk-str">"ON"</span>:
+        rele.<span class="tk-fn">on</span>()
+        <span class="tk-fn">print</span>(<span class="tk-str">"Bomba ACTIVADA"</span>)
+    <span class="tk-key">elif</span> comando == <span class="tk-str">"OFF"</span>:
+        rele.<span class="tk-fn">off</span>()
+        <span class="tk-fn">print</span>(<span class="tk-str">"Bomba DETENIDA"</span>)
+
+client = mqtt.<span class="tk-fn">Client</span>()
+client.<span class="tk-fn">on_message</span> = on_message
+client.<span class="tk-fn">connect</span>(<span class="tk-str">"broker.hivemq.com"</span>, <span class="tk-num">1883</span>)
+client.<span class="tk-fn">subscribe</span>(topic)
+client.<span class="tk-fn">loop_forever</span>()</pre>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Caso 3 — interactive demo -->
+      <article class="accordion-item reveal delay-2" data-accordion>
+        <div class="accordion-header">
+          <span class="accordion-num">3</span>
+          <div class="accordion-title">
+            <h3>Alerta por umbral</h3>
+            <p>Demostración interactiva de alarma por temperatura crítica.</p>
+          </div>
+        </button>
+        <div class="accordion-content" id="acc-3">
+          <div class="accordion-inner">
+            <p>Define un umbral de temperatura máximo permitido. Una simulación actualiza el valor del sensor cada 2 segundos. Si la lectura supera el umbral, se dispara una alerta visual en tiempo real; de lo contrario, se confirma que el proceso está dentro del rango normal.</p>
+            <div class="demo-box">
+              <div class="demo-row">
+                <label for="threshold-slider">Umbral de alerta:</label>
+                <div class="slider-group">
+                  <input type="range" id="threshold-slider" min="20" max="80" value="50" step="1" aria-label="Umbral de temperatura en grados Celsius">
+                  <span class="threshold-value" id="threshold-display">50°C</span>
+                </div>
+              </div>
+              <div class="sensor-readout">
+                <span class="pulse" aria-hidden="true"></span>
+                <span>Temperatura actual del sensor: <strong id="sensor-value">--</strong> °C</span>
+              </div>
+              <div class="alert-banner ok" id="alert-banner" role="status" aria-live="polite">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="alert-message">Esperando primera lectura…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Caso 4 — daily report -->
+      <article class="accordion-item reveal delay-3" data-accordion>
+        <div class="accordion-header">
+          <span class="accordion-num">4</span>
+          <div class="accordion-title">
+            <h3>Reporte periódico</h3>
+            <p>Generación automática de un informe diario de operación.</p>
+          </div>
+        </button>
+        <div class="accordion-content" id="acc-4">
+          <div class="accordion-inner">
+            <p>El sistema consolida las lecturas del día en un reporte con métricas clave: temperatura promedio, máxima registrada, estado del proceso y recomendaciones de mantenimiento. Pulsa el botón para simular la generación del informe.</p>
+            <button class="btn btn-primary" id="report-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
+              <span>Generar reporte diario</span>
+            </button>
+            <div class="report-output" id="report-output" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GUÍA ================= -->
+<section class="section section-alt" id="guia">
+  <div class="container">
+    <span class="eyebrow center">Aprendizaje</span>
+    <h2 class="section-title reveal">Ruta de aprendizaje</h2>
+    <p class="section-subtitle reveal delay-1">Una progresión de cinco etapas para pasar de la teoría a una solución funcional. Cada etapa propone una evidencia de aprendizaje concreta y verificable.</p>
+
+    <div class="roadmap reveal">
+      <div class="roadmap-line" aria-hidden="true"></div>
+      <div class="roadmap-stages">
+        <div class="stage">
+          <div class="stage-num">1</div>
+          <h4>Comprender</h4>
+          <p>Conceptos de IoT, sensores y protocolos.</p>
+          <span class="stage-evidence">Mapa conceptual</span>
+        </div>
+        <div class="stage">
+          <div class="stage-num">2</div>
+          <h4>Observar</h4>
+          <p>Leer ejemplos y reconocer cada componente del flujo.</p>
+          <span class="stage-evidence">Diagrama anotado</span>
+        </div>
+        <div class="stage">
+          <div class="stage-num">3</div>
+          <h4>Practicar</h4>
+          <p>Ejecutar pruebas en un entorno seguro.</p>
+          <span class="stage-evidence">Captura de broker</span>
+        </div>
+        <div class="stage">
+          <div class="stage-num">4</div>
+          <h4>Configurar</h4>
+          <p>Programar una alerta por umbral.</p>
+          <span class="stage-evidence">Código funcional</span>
+        </div>
+        <div class="stage">
+          <div class="stage-num">5</div>
+          <h4>Evaluar</h4>
+          <p>Analizar fallos y mejorar la solución.</p>
+          <span class="stage-evidence">Bitácora de mejora</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SEGURIDAD ================= -->
+<section class="section" id="seguridad">
+  <div class="container">
+    <span class="eyebrow center">Buenas prácticas</span>
+    <h2 class="section-title reveal">Seguridad y buenas prácticas</h2>
+    <p class="section-subtitle reveal delay-1">Un sistema IoT industrial expuesto puede comprometer equipos, datos y personas. Estas prácticas reducen el riesgo y aumentan la confiabilidad operativa.</p>
+
+    <div class="seguridad-grid">
+      <div class="practices-list reveal">
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Cifrar la comunicación con TLS entre dispositivos, gateway y broker.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Usar credenciales únicas y contraseñas robustas por dispositivo.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Segmentar la red industrial (OT) de la red corporativa (IT).</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actualizar el firmware de los dispositivos de forma periódica.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Aplicar el principio de mínimo privilegio en usuarios y servicios.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Registrar y monitorear eventos críticos en una bitácora centralizada.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Definir un plan de respuesta ante incidentes y caídas del sistema.</span></div>
+        <div class="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Realizar copias de seguridad de la configuración y datos históricos.</span></div>
+      </div>
+
+      <aside class="risks-box reveal delay-1">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Riesgos frecuentes
+        </h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Dispositivos con credenciales por defecto sin cambiar.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Tráfico MQTT sin cifrar expuesto en redes públicas.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Falta de actualizaciones de firmware por meses o años.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Ausencia de registros para auditar qué ocurrió tras un fallo.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Dashboards accesibles sin autenticación ni control de roles.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Falsa sensación de seguridad al confiar únicamente en la red LAN.</span></li>
+        </ul>
+      </aside>
+    </div>
+
+    <div class="principles-callout reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      <p>La automatización IoT debe aumentar la confiabilidad del trabajo, no esconder errores ni reemplazar la responsabilidad del operador.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RECURSOS ================= -->
+<section class="section section-alt" id="recursos">
+  <div class="container">
+    <span class="eyebrow center">Recursos</span>
+    <h2 class="section-title reveal">Recursos educativos</h2>
+    <p class="section-subtitle reveal delay-1">Materiales complementarios para profundizar en cada tema del curso. Algunos enlaces son marcadores que se actualizarán con los documentos finales del proyecto.</p>
+
+    <div class="recursos-grid">
+      <!-- Recurso 1 -->
+      <article class="recurso-card reveal">
+        <div class="recurso-head">
+          <div class="recurso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3>Lectura base (Tema 2)</h3>
+        </div>
+        <p class="recurso-desc">Documento de referencia con el marco teórico de la automatización industrial mediante IoT: arquitectura, componentes y casos de aplicación.</p>
+        <div class="recurso-embed">
+          <a href="#" class="btn-card" title="Documento de lectura base sobre fundamentos de IoT industrial (Tema 2) — pendiente de vincular">
+            <span>Ver documento</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Recurso 2 — imagen -->
+      <article class="recurso-card reveal delay-1">
+        <div class="recurso-head">
+          <div class="recurso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <h3>Imagen temática (Tema 3)</h3>
+        </div>
+        <p class="recurso-desc">Visualización de un entorno industrial con sensores y actuadores conectados en red, ideal para contextualizar el flujo de datos.</p>
+        <div class="recurso-embed">
+          <img src="https://preview-zai-web.s3.amazonaws.com/iot-image-01.png" alt="Fábrica industrial con sensores IoT" loading="lazy">
+        </div>
+      </article>
+
+      <!-- Recurso 3 — video -->
+      <article class="recurso-card reveal delay-2">
+        <div class="recurso-head">
+          <div class="recurso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          <h3>Video educativo (Tema 4)</h3>
+        </div>
+        <p class="recurso-desc">Explicación audiovisual del flujo completo: sensores, gateway, broker MQTT, dashboard y actuadores en operación.</p>
+        <div class="recurso-embed">
+          <div class="iframe-wrap">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video educativo de IoT industrial" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <span class="note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Reemplazar por tu enlace real
+          </span>
+        </div>
+      </article>
+
+      <!-- Recurso 4 -->
+      <article class="recurso-card reveal delay-3">
+        <div class="recurso-head">
+          <div class="recurso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>Presentación (Tema 5)</h3>
+        </div>
+        <p class="recurso-desc">Diapositivas con la síntesis del proyecto, casos de estudio y conclusiones para defensa o exposición en clase.</p>
+        <div class="recurso-embed">
+          <a href="#" class="btn-card" title="Presentación del proyecto final sobre IoT industrial (Tema 5) — pendiente de vincular">
+            <span>Ver presentación</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <div class="references reveal">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Referencias
+      </h3>
+      <ul>
+        <li><strong>IEA (International Energy Agency).</strong> <em>Digitalisation and Energy Efficiency</em>. Informe sobre el impacto de la digitalización en la eficiencia industrial. OECD/IEA, París.</li>
+        <li><strong>UNESCO.</strong> <em>Education for Sustainable Development Goals: Learning Objectives</em>. Marco de aprendizaje para la sostenibilidad aplicable a tecnologías industriales. UNESCO, París.</li>
+        <li><strong>Stanford HAI (Institute for Human-Centered Artificial Intelligence).</strong> <em>AI Index Report</em>. Informe anual sobre el estado de la inteligencia artificial y sus implicaciones éticas y operativas. Universidad de Stanford.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="2.5"/>
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+        <circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/>
+      </svg>
+      <span>IoT <span class="accent">Industrial</span></span>
+    </div>
+    <div class="footer-author">Ricardo Armando Balmaceda Urbina</div>
+    <div class="footer-meta">
+      <span>Proyecto Final — Automatización Industrial mediante IoT</span>
+      <span>Tema 6 · Ética de la Inteligencia Artificial</span>
+      <span>Año 2026</span>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-note">Sitio educativo diseñado para fines académicos</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   JAVASCRIPT — todo en un solo bloque
+   ========================================================= */
+(function () {
+  'use strict';
+
+  /* ---------- 1. Mobile menu toggle ---------- */
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+
+  function closeMenu() {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Abrir menú');
+  }
+  function openMenu() {
+    navLinks.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Cerrar menú');
+  }
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function () {
+      var isOpen = navLinks.classList.contains('open');
+      if (isOpen) { closeMenu(); } else { openMenu(); }
+    });
+    // Cerrar al hacer clic en un enlace (móvil)
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (window.innerWidth <= 880) { closeMenu(); }
+      });
+    });
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', function (e) {
+      if (!navLinks.contains(e.target) && !navToggle.contains(e.target)) {
+        closeMenu();
+      }
+    });
+    // Cerrar con Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+        closeMenu();
+        navToggle.focus();
+      }
+    });
+  }
+
+  /* ---------- 2. Smooth scroll + close mobile menu on nav click ---------- */
+  // No animation: instant jump. Just close mobile menu after click.
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function () {
+      var targetId = this.getAttribute('href');
+      if (targetId === '#' || targetId.length < 2) return;
+      // Close mobile menu if open
+      var nav = document.getElementById('primary-nav');
+      if (nav && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        var t = document.querySelector('.nav-toggle');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  /* ---------- 3. Active nav link on scroll (IntersectionObserver) ---------- */
+  var sections = document.querySelectorAll('main section[id]');
+  var navItems = document.querySelectorAll('.nav-links a');
+  if ('IntersectionObserver' in window && sections.length) {
+    var navObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.getAttribute('id');
+          navItems.forEach(function (item) {
+            var isActive = item.getAttribute('href') === '#' + id;
+            if (isActive) { item.classList.add('active'); }
+            else { item.classList.remove('active'); }
+          });
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (sec) { navObserver.observe(sec); });
+  }
+
+  /* ---------- 4. Fade-in on scroll ---------- REMOVED */
+  /* Animations removed for Google Sites compatibility (iframe resize breaks timing). */
+  var revealEls = document.querySelectorAll('.reveal');
+  revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  /* ---------- 5. Accordion REMOVED — content now always visible ---------- */
+  /* ---------- 6. "Saber más" toggle REMOVED — concept-extra now always visible ---------- */
+
+  /* ---------- 7. Interactive alert-by-threshold demo ---------- */
+  var slider = document.getElementById('threshold-slider');
+  var thresholdDisplay = document.getElementById('threshold-display');
+  var sensorValueEl = document.getElementById('sensor-value');
+  var alertBanner = document.getElementById('alert-banner');
+  var alertMessage = document.getElementById('alert-message');
+  var demoTimer = null;
+
+  function updateSliderTrack(value) {
+    if (!slider) return;
+    var min = parseInt(slider.min, 10);
+    var max = parseInt(slider.max, 10);
+    var pct = ((value - min) / (max - min)) * 100;
+    slider.style.background = 'linear-gradient(90deg, #06B6D4 0%, #06B6D4 ' + pct + '%, #d4ebf3 ' + pct + '%, #d4ebf3 100%)';
+  }
+
+  function renderAlert(sensorVal, threshold) {
+    if (!alertBanner || !alertMessage || !sensorValueEl) return;
+    sensorValueEl.textContent = sensorVal.toFixed(1);
+    var icon = alertBanner.querySelector('svg');
+    if (sensorVal > threshold) {
+      alertBanner.classList.remove('ok');
+      alertBanner.classList.add('warn');
+      alertMessage.textContent = '⚠ Alerta: temperatura ' + sensorVal.toFixed(1) + '°C supera el umbral ' + threshold + '°C';
+      if (icon) {
+        icon.innerHTML = '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+      }
+    } else {
+      alertBanner.classList.remove('warn');
+      alertBanner.classList.add('ok');
+      alertMessage.textContent = '✓ Temperatura ' + sensorVal.toFixed(1) + '°C dentro del rango normal';
+      if (icon) {
+        icon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      }
+    }
+  }
+
+  function startDemo() {
+    if (!slider) return;
+    var threshold = parseInt(slider.value, 10);
+    function tick() {
+      var value = Math.random() * 60 + 20; // 20–80
+      renderAlert(value, threshold);
+    }
+    tick(); // primera lectura inmediata
+    if (demoTimer) clearInterval(demoTimer);
+    demoTimer = setInterval(tick, 2000);
+  }
+
+  if (slider) {
+    slider.addEventListener('input', function () {
+      var threshold = parseInt(slider.value, 10);
+      thresholdDisplay.textContent = threshold + '°C';
+      updateSliderTrack(threshold);
+    });
+    updateSliderTrack(parseInt(slider.value, 10));
+    // Iniciar demo cuando el caso 3 sea visible
+    var caso3 = document.getElementById('acc-3');
+    if (caso3 && 'IntersectionObserver' in window) {
+      var demoObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            startDemo();
+          }
+        });
+      }, { threshold: 0.2 });
+      demoObserver.observe(caso3);
+    } else {
+      startDemo();
+    }
+  }
+
+  /* ---------- 8. Daily report generator ---------- */
+  var reportBtn = document.getElementById('report-btn');
+  var reportOutput = document.getElementById('report-output');
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function generateReport() {
+    if (!reportOutput) return;
+    var now = new Date();
+    var fecha = now.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    var hora = pad(now.getHours()) + ':' + pad(now.getMinutes());
+
+    // Métricas simuladas
+    var lecturas = [];
+    for (var i = 0; i < 24; i++) { lecturas.push(Math.random() * 30 + 22); }
+    var suma = lecturas.reduce(function (a, b) { return a + b; }, 0);
+    var promedio = (suma / lecturas.length).toFixed(1);
+    var maxima = Math.max.apply(null, lecturas).toFixed(1);
+    var minima = Math.min.apply(null, lecturas).toFixed(1);
+    var alertas = lecturas.filter(function (v) { return v > 45; }).length;
+    var estado = alertas > 0 ? '⚠ Requiere atención' : '✓ Operación normal';
+
+    var recomendaciones = [];
+    if (alertas > 3) {
+      recomendaciones.push('Revisar sistema de refrigeración de la línea 1.');
+      recomendaciones.push('Programar mantenimiento preventivo del sensor de temperatura.');
+    } else if (alertas > 0) {
+      recomendaciones.push('Monitorear de cerca las próximas 24 horas.');
+      recomendaciones.push('Verificar calibración del sensor de temperatura.');
+    } else {
+      recomendaciones.push('Mantener el plan de monitoreo actual.');
+      recomendaciones.push('Continuar con la rutina de inspección semanal.');
+    }
+
+    var html = '<h4>Reporte diario de operación</h4>' +
+      '<div class="report-row"><span>Fecha</span><span>' + fecha + '</span></div>' +
+      '<div class="report-row"><span>Hora de generación</span><span>' + hora + '</span></div>' +
+      '<div class="report-row"><span>Temperatura promedio</span><span>' + promedio + ' °C</span></div>' +
+      '<div class="report-row"><span>Temperatura máxima</span><span>' + maxima + ' °C</span></div>' +
+      '<div class="report-row"><span>Temperatura mínima</span><span>' + minima + ' °C</span></div>' +
+      '<div class="report-row"><span>Lecturas con alerta</span><span>' + alertas + ' / 24</span></div>' +
+      '<div class="report-row"><span>Estado del proceso</span><span>' + estado + '</span></div>' +
+      '<div class="report-recs"><strong>Recomendaciones:</strong><ul>' +
+      recomendaciones.map(function (r) { return '<li>' + r + '</li>'; }).join('') +
+      '</ul></div>';
+
+    reportOutput.innerHTML = html;
+    reportOutput.classList.add('show');
+  }
+
+  if (reportBtn) {
+    reportBtn.addEventListener('click', generateReport);
+  }
+
+  /* ---------- 9. Year dinámico (si se quiere usar) ---------- */
+  // El año del footer ya está como 2026 según especificación; no se sobrescribe.
+
+})();
+</script>
+</body>
+</html>
